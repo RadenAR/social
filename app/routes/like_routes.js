@@ -13,8 +13,22 @@ const router = express.Router()
 // Get amount of likes for post
 router.get('/likes/:id', requireToken, (req, res, next) => {
   Like.find({ post: req.params.id })
-    .then(posts => res.status(201).json({ likeCount: posts.length }))
+    .then(likes => res.status(200).json({ likeCount: likes.length }))
     .catch(next)
+})
+
+// Check if liked a single post
+router.get('/likes', requireToken, (req, res, next) => {
+  Like.find({ owner: req.user.id, post: req.body.like.post })
+    .then(likes => {
+      let liked
+      if (likes[0]) {
+        liked = true
+      } else {
+        liked = false
+      }
+      return res.status(200).json({ liked })
+    })
 })
 
 // Like
