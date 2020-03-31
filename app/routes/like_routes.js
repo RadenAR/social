@@ -18,11 +18,11 @@ router.get('/likes/:id', requireToken, (req, res, next) => {
 })
 
 // Check if liked a single post
-router.get('/likes', requireToken, (req, res, next) => {
-  Like.find({ owner: req.user.id, post: req.body.like.post })
+router.get('/likes/number/:id', requireToken, (req, res, next) => {
+  Like.find({ owner: req.user.id, post: req.params.id })
     .then(likes => {
       let liked
-      if (likes[0]) {
+      if (likes.length > 0) {
         liked = true
       } else {
         liked = false
@@ -32,25 +32,26 @@ router.get('/likes', requireToken, (req, res, next) => {
 })
 
 // Like
-router.post('/likes', requireToken, (req, res, next) => {
-  req.body.like.owner = req.user.id
-
-  Like.find({ owner: req.body.like.owner, post: req.body.like.post })
+router.post('/likes/:id', requireToken, (req, res, next) => {
+  Like.find({ owner: req.user.id, post: req.params.id })
     .then(handleLiked)
     .then(like => {
-      Like.create(req.body.like)
-        .then(like => {
-          res.status(201).json({ like: like.toObject() })
-        })
+      const newLike = {
+        owner: req.user.id,
+        post: req.params.id
+      }
+      Like.create(newLike)
+        .then(() => { res.sendStatus(201) })
     })
     .catch(next)
 })
 
 // Unlike
-router.delete('/likes', requireToken, (req, res, next) => {
-  Like.find({ owner: req.user.id, post: req.body.like.post })
+router.delete('/likes/:id', requireToken, (req, res, next) => {
+  Like.find({ owner: req.user.id, post: req.params.id })
     .then(handleUnliked)
     .then(like => {
+      console.log(like)
       like = like[0]
       like.deleteOne()
     })
@@ -59,10 +60,10 @@ router.delete('/likes', requireToken, (req, res, next) => {
 })
 
 // FOR POSTMAN, DELETE BEFORE SUBMISSION
-router.get('/likes', (req, res, next) => {
-  Like.find()
-    .then(likes => res.status(200).json({ likes }))
-    .catch(next)
-})
+// router.get('/likes', (req, res, next) => {
+//   Like.find()
+//     .then(likes => res.status(200).json({ likes }))
+//     .catch(next)
+// })
 
 module.exports = router
