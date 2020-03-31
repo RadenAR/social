@@ -51,7 +51,6 @@ router.delete('/likes/:id', requireToken, (req, res, next) => {
   Like.find({ owner: req.user.id, post: req.params.id })
     .then(handleUnliked)
     .then(like => {
-      console.log(like)
       like = like[0]
       like.deleteOne()
     })
