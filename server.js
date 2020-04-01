@@ -2,6 +2,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const socketIo = require('socket.io')
 
 // require route files
 const exampleRoutes = require('./app/routes/example_routes')
@@ -76,8 +77,53 @@ app.use(commentRoutes)
 app.use(errorHandler)
 
 // run API on designated port (4741 in this case)
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log('listening on port ' + port)
+})
+
+const io = socketIo(server)
+
+io.on('connection', (socketIo) => {
+  console.log('User connected')
+
+  socketIo.on('new post', () => {
+    console.log('recieved a new post')
+    socketIo.broadcast.emit('send')
+  })
+
+  socketIo.on('edited post', () => {
+    console.log('recieved an edited post')
+    socketIo.broadcast.emit('send-edited-post')
+  })
+
+  socketIo.on('deleted post', () => {
+    console.log('deleted a post')
+    socketIo.broadcast.emit('send-delete-post')
+  })
+
+  socketIo.on('new comment', () => {
+    console.log('recieved a new comment')
+    socketIo.broadcast.emit('send-comment')
+  })
+
+  socketIo.on('edited comment', () => {
+    console.log('recieved an edited comment')
+    socketIo.broadcast.emit('send-comment-edit')
+  })
+
+  socketIo.on('deleted comment', () => {
+    console.log('deleted a comment')
+    socketIo.broadcast.emit('send-comment-deleted')
+  })
+
+  socketIo.on('like change', () => {
+    console.log('like or unlike happened')
+    socketIo.broadcast.emit('like-change')
+  })
+
+  socketIo.on('disconnect', () => {
+    console.log('user disconnected')
+  })
 })
 
 // needed for testing
