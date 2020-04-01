@@ -5,6 +5,7 @@ const User = require('../models/user')
 
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
+const BadParamsError = customErrors.BadParamsError
 // const requireOwnership = customErrors.requireOwnership
 
 // const removeBlanks = require('../../lib/remove_blank_fields')
@@ -35,6 +36,12 @@ router.post('/friends/:username', requireToken, (req, res, next) => {
       User.findById(req.user.id)
         .then(handle404)
         .then(person => {
+          console.log('person', person)
+          person.friends.forEach(user => {
+            if (user.username === newFriend.username) {
+              throw new BadParamsError()
+            }
+          })
           person.friends.push(newFriend)
           person.save()
           return person

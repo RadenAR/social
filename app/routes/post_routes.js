@@ -2,6 +2,7 @@ const express = require('express')
 const passport = require('passport')
 
 const Post = require('../models/post')
+const User = require('../models/user')
 
 const customErrors = require('../../lib/custom_errors')
 const handle404 = customErrors.handle404
@@ -15,6 +16,28 @@ const router = express.Router()
 router.get('/posts', requireToken, (req, res, next) => {
   Post.find()
     .then(posts => res.status(200).json({ posts: posts }))
+    .catch(next)
+})
+
+// Index friends posts
+router.get('/friends/posts', requireToken, (req, res, next) => {
+  User.findById(req.user.id)
+    .then(user => {
+      const friendsList = user.friends.map(friend => friend._id)
+      return friendsList
+    })
+    .then(list => {
+      return Post.find({ owner: list }).catch(next)
+    })
+    .then(posts => res.status(200).json({ posts: posts }))
+    .catch(next)
+})
+
+// Index user's posts
+router.get('/myPosts', requireToken, (req, res, next) => {
+  Post.find({ owner: req.user.id })
+    .then(posts => res.status(200).json({ posts: posts }))
+    .catch(next)
     .catch(next)
 })
 
