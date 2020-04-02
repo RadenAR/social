@@ -13,11 +13,11 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // Index
-router.get('/friends', requireToken, (req, res, next) => {
-  User.find()
-    .then(users => res.status(200).json({ users: users.map(user => user.toObject()) }))
-    .catch(next)
-})
+// router.get('/friends', requireToken, (req, res, next) => {
+//   User.find()
+//     .then(users => res.status(200).json({ users: users.map(user => user.toObject()) }))
+//     .catch(next)
+// })
 
 // Show
 router.get('/friends/:username', requireToken, (req, res, next) => {

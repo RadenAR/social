@@ -58,11 +58,4 @@ router.delete('/likes/:id', requireToken, (req, res, next) => {
     .catch(next)
 })
 
-// FOR POSTMAN, DELETE BEFORE SUBMISSION
-// router.get('/likes', (req, res, next) => {
-//   Like.find()
-//     .then(likes => res.status(200).json({ likes }))
-//     .catch(next)
-// })
-
 module.exports = router
