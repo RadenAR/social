@@ -186,4 +186,4 @@ Back-end:
 
 ## Screenshot
 
-![alt text](https://i.imgur.com/dCjzRPv.png "Social Media")
+![alt text](https://i.imgur.com/qvds7oE.png "Social Media")
