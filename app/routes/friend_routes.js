@@ -36,7 +36,6 @@ router.post('/friends/:username', requireToken, (req, res, next) => {
       User.findById(req.user.id)
         .then(handle404)
         .then(person => {
-          console.log('person', person)
           person.friends.forEach(user => {
             if (user.username === newFriend.username) {
               throw new BadParamsError()
