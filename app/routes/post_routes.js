@@ -44,6 +44,7 @@ router.get('/myPosts', requireToken, (req, res, next) => {
 // Show
 router.get('/posts/:id', requireToken, (req, res, next) => {
   Post.findById(req.params.id)
+    .populate('owner', 'username')
     .then(handle404)
     .then(post => res.status(200).json({ post: post.toObject() }))
     .catch(next)

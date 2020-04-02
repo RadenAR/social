@@ -14,6 +14,7 @@ const router = express.Router()
 // Index
 router.get('/posts/comments/:id', requireToken, (req, res, next) => {
   Post.findById(req.params.id)
+    .populate('comments.owner', 'username')
     .then(post => res.status(200).json({ comments: post.comments }))
     .catch(next)
 })
@@ -21,6 +22,7 @@ router.get('/posts/comments/:id', requireToken, (req, res, next) => {
 // Show
 router.get('/posts/comments/:id/:num', requireToken, (req, res, next) => {
   Post.findById(req.params.id)
+    .populate('comments.owner', 'username')
     .then(post => {
       return post.comments.find(comment => `${comment._id}` === req.params.num)
     })
