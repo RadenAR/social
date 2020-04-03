@@ -16,7 +16,7 @@ const router = express.Router()
 router.get('/posts', requireToken, (req, res, next) => {
   Post.find()
     .populate('owner', 'username')
-    .then(posts => res.status(200).json({ posts: posts }))
+    .then(posts => res.status(200).json({ posts: posts.reverse() }))
     .catch(next)
 })
 
@@ -30,14 +30,14 @@ router.get('/friends/posts', requireToken, (req, res, next) => {
     .then(list => {
       return Post.find({ owner: list }).populate('owner', 'username').catch(next)
     })
-    .then(posts => res.status(200).json({ posts: posts }))
+    .then(posts => res.status(200).json({ posts: posts.reverse() }))
     .catch(next)
 })
 
 // Index user's posts
 router.get('/myPosts', requireToken, (req, res, next) => {
   Post.find({ owner: req.user.id })
-    .then(posts => res.status(200).json({ posts: posts }))
+    .then(posts => res.status(200).json({ posts: posts.reverse() }))
     .catch(next)
 })
 
