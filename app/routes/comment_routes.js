@@ -15,7 +15,7 @@ const router = express.Router()
 router.get('/posts/comments/:id', requireToken, (req, res, next) => {
   Post.findById(req.params.id)
     .populate('comments.owner', 'username')
-    .then(post => res.status(200).json({ comments: post.comments }))
+    .then(post => res.status(200).json({ comments: post.comments.reverse() }))
     .catch(next)
 })
 
