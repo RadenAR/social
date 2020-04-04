@@ -62,6 +62,7 @@ router.patch('/posts/comments/:id/:num', requireToken, (req, res, next) => {
       if (req.body.comment.text) {
         item.text = req.body.comment.text
       }
+      requireOwnership(req, item)
       post.save()
     })
     .then(() => res.sendStatus(204))
