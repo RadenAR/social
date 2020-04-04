@@ -33,6 +33,9 @@ router.post('/friends/:username', requireToken, (req, res, next) => {
     .then(handle404)
     .then(user => {
       const newFriend = user[0]
+      if (newFriend === undefined) {
+        throw new BadParamsError()
+      }
       User.findById(req.user.id)
         .then(handle404)
         .then(person => {
